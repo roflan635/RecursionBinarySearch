@@ -4,17 +4,29 @@
 #include "pch.h"
 #include "Task.h"
 #include "algorithm"
-int FindElement(int* arr, int size, int value, int index)
+int FindElement(int* arr, int left, int right, int value)
 {
-	if (value < 0) return -1;
-	if (arr[index] == value) return index;
-	else FindElement(arr, size, value, index + 1);
+	int middle = (right + left) / 2;	//ввод переменной середины массива
+	if (arr[middle] == value)
+	{
+		while (arr[middle] == value)	//цикл, который при нахождении значения в середине сдвигает middle влево, чтобы найти самое первое искомое значение
+			middle--;
+		if (arr[middle] != value)
+			middle++;
+		return middle;
+	}
+	if (arr[middle] > value)
+		return FindElement(arr, left, middle - 1, value);	//ставим на место середины массива правую границу и с помощью рекурсии снова выполняем функцию, если искомое значение больше середины
+	if (arr[middle] < value)
+		return FindElement(arr, middle + 1, right, value);	//ставим на место середины массива левую границу и с помощью рекурсии снова выполняем функцию, если искомое значение меньше середины
 }
+
 int RecursionBinarySearch(int* arr, int size, int value)
 {
-	if (size == 0 || arr == nullptr) return -1;
-	int index = 0;
-	FindElement(arr, size, value, index);
+	if (size == 0 || arr == nullptr || value > size || value < 0 || value == 0) return -1;		//проверка на условия, которые не может решать данная функция
+	if (arr[0] == value) return 0;
+	if(size > 1)
+		return FindElement(arr, 0, size -1, value);
 }
 /*
 Создайте РЕКУРСИВНУЮ функцию, которая ищет в сортированном по возрастанию целочисленном массиве 
